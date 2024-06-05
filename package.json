@@ -1,0 +1,22 @@
+{
+  "name": "skin-care-rest-api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "nodemon ./frameworks/index.ts",
+    "build": "tsc .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "siham heddi",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.12.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
