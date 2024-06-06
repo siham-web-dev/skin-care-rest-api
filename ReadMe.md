@@ -4,7 +4,7 @@
 
 - express + typescript
 - socket.io + redis
-- logger + cors + dotenv + swagger + jest + supertest
+- logger with pino and pino-pretty + cors + dotenv + swagger + jest + supertest
 - docker
 - typeorm + postgresql
 - validation with zod
