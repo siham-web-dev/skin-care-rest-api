@@ -6,8 +6,8 @@ import dbConnect from "./DBConfig";
 const server = createServer();
 dotenv.config();
 
-server.listen(process.env.SERVER_PORT, () => {
-    logger.info(`Server is running on port ${process.env.SERVER_PORT}`);
+server.listen(process.env.WEB_SERVER_PORT, () => {
+    logger.info(`Server is running on port ${process.env.WEB_SERVER_PORT}`);
  
     dbConnect
     .initialize()
