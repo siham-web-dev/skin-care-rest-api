@@ -5,10 +5,10 @@ import "reflect-metadata";
 import session from "express-session";
 import genFunc from "connect-pg-simple";
 import { authPassportLocalStrategy } from "./middlewares/authPassportLocalStrategy";
+import passport from "passport";
 
 function createServer(): Express {
-  const DATABASE_URL = `pg://${process.env.DB_SERVER_USERNAME}:${process.env.DB_SERVER_PASSWORD}@
-   ${process.env.DB_SERVER_HOST}:${process.env.DB_SERVER_PORT}/${process.env.DB_NAME}`;
+  const DATABASE_URL = `pg://${process.env.DB_SERVER_USERNAME}:${process.env.DB_SERVER_PASSWORD}@${process.env.DB_SERVER_HOST}:${process.env.DB_SERVER_PORT}/${process.env.DB_NAME}`;
   
   const app: Express = express();
   const PostgresqlStore = genFunc(session);
@@ -26,6 +26,8 @@ function createServer(): Express {
   app.use(express.json());
   app.use(cors());
   app.use(session(sessionOptions));
+  app.use(passport.initialize());
+  app.use(passport.session());
   authPassportLocalStrategy();
     
   app.use("/api/v1/", router);

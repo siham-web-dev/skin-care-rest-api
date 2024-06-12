@@ -2,11 +2,11 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from "typ
 import Order from "./OrderModel"
 import Company from "./CompanyModel"
 import Message from "./MessageModel"
+import { Role } from "../../../entities/types/enum"
+import * as dotenv from "dotenv"
+dotenv.config()
 
-enum Role {
-    ADMIN = "admin",
-    CUSTOMER = "customer"
-}
+const DEFAULT_USER_IMAGE_URL = `${process.env.STORAGE_DIR_PATH}/default.png`
 
 @Entity()
 class User {
@@ -34,7 +34,10 @@ class User {
     @Column()
     phone: string
 
-    @Column()
+    @Column({
+        nullable: true,
+        default: DEFAULT_USER_IMAGE_URL
+    })
     image_url: string
 
     @OneToMany(() => Order, (order) => order.user)

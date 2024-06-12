@@ -1,15 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm"
 import Product from "./ProductModel"
 import User from "./UserModel"
-
-enum Status {
-    PENDING = "pending",
-    ACCEPTED = "accepted",
-    DELIVERED = "delivered",
-    CANCELLED = "cancelled",
-    PAID = "paid",
-    UNPAID = "unpaid"
-}
+import { Status } from "../../../entities/types/enum"
 
 @Entity()
 class Order {

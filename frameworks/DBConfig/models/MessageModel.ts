@@ -1,10 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm"
 import User from "./UserModel"
-
-enum SenderType {
-    USER = "user",
-    BOT = "bot"
-}
+import { SenderType } from "../../../entities/types/enum"
 
 @Entity()
 class Message {
