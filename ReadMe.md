@@ -8,7 +8,7 @@
 - docker
 - typeorm + postgresql
 - validation with zod
-- authentication with google + facebook or by email + username + phone_number
+- authentication by email + username + phone_number
   by using passport , express-session , cookies
 - firebase for uploading images + ai assisstant bot
 
