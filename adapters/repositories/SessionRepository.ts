@@ -17,17 +17,6 @@ export class SessionRepository extends Repository {
         await this.db.save(sessionEntity);
         return sessionEntity;
     }
-    
-    // is not auth middleware
-    async findSessionByUserId(user_id: number): Promise<SessionEntity | null> {
-        const session = await this.db.findOne(SessionEntity, {
-            where: [
-                { user_id },
-            ],
-        });
-
-        return session;
-    }
 
     // is auth middleware
     async findSessionBySessionIdAndUserName(session_id: number, username: string): Promise<boolean> {

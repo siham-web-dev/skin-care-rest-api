@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import AppError from "../utils/appError";
 import logger from "../utils/logger";
 
-const ErrorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+const ErrorHandler = (err:Error, req: Request, res: Response, next: NextFunction) => {
     if(err instanceof AppError) {
         return res.status(err.statusCode).send({ error: err.message })
     }

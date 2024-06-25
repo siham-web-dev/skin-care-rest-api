@@ -5,15 +5,19 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import UserAuthentication from "../../usecases/userUseCases/userAuthentication";
 import SessionRepository from "../repositories/SessionRepository";
+import UserSignOut from "../../usecases/userUseCases/userSignout";
 
 class UserController {
-    
+  private userRepository: UserRepository;
+  private sessionRepository: SessionRepository;
+  constructor() {
+    const db = dbConnect.manager;
+    this.userRepository = new UserRepository(db);
+    this.sessionRepository = new SessionRepository(db);
+  }
   async login(req: Request, res: Response): Promise<void> {
     const { usernameOrEmailOrPhone, password } = req.body;
-    const db = dbConnect.manager;
-    const userRepository = new UserRepository(db);
-    const sessionRepository = new SessionRepository(db);
-    const loginUseCase = new UserAuthentication(userRepository, sessionRepository);
+    const loginUseCase = new UserAuthentication(this.userRepository, this.sessionRepository);
     const token = await loginUseCase.execute(usernameOrEmailOrPhone, password);
     
     res.status(201).send({ token, message: "login success" });
@@ -22,9 +26,9 @@ class UserController {
   async register(req: Request, res: Response): Promise<void> {
     const { firstName, lastName, username, password, role, email, phone } =
       req.body;
-    const db = dbConnect.manager;
-    const userRepository = new UserRepository(db);
-    const registerUseCase = new UserRegistration(userRepository);
+   
+   
+    const registerUseCase = new UserRegistration(this.userRepository);
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await registerUseCase.execute(
       firstName,
@@ -44,8 +48,10 @@ class UserController {
     });
   }
 
-  async logout(req: Request, res: Response): Promise<void> {
-    
+  async logout(req: any, res: Response): Promise<void> {
+    const { session_id } = req.sessionInfo;
+    const signOutUseCase = new UserSignOut(this.sessionRepository);
+    await signOutUseCase.execute(session_id);
     res.status(201).send({ message: "logout success" });
   }
 }

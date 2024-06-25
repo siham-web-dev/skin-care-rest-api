@@ -6,7 +6,7 @@ import UserEntity from '../../entities/User';
 import AppError from '../../frameworks/ServerConfig/utils/appError';
 import { Repository } from './Repository';
 
-export class UserRepository extends Repository {
+class UserRepository extends Repository {
     
     constructor(db: EntityManager) {
        super(db);

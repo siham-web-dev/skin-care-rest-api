@@ -1,14 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { getTokenFromAuthorizationHeaderRequest, verify_token } from "../utils/auth";
 
-type SessionRequest = Request & {
-    sessionInfo: {
-        session_id: string;
-        username: string;
-    };
-}
-
-const isAuthenticated = (req: SessionRequest, res: Response, next: NextFunction) => {
+const isAuthenticated = (req: any, res: Response, next: NextFunction) => {
     // get token from header
     const token = getTokenFromAuthorizationHeaderRequest(req);
     // verify token and get session info
