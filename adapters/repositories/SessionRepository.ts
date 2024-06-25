@@ -2,6 +2,7 @@ import { EntityManager } from 'typeorm';
 import SessionEntity from '../../entities/session';
 import AppError from '../../frameworks/ServerConfig/utils/appError';
 import { Repository } from './Repository';
+import User from '../../entities/User';
 
 export class SessionRepository extends Repository {
 
@@ -26,6 +27,29 @@ export class SessionRepository extends Repository {
         });
 
         return session;
+    }
+
+    // is auth middleware
+    async findSessionBySessionIdAndUserName(session_id: number, username: string): Promise<boolean> {
+        const user = await this.db.findOne(User, {
+            where: [
+                { username },
+            ]
+        })
+        if (!user) {
+            throw new AppError('User not found with this username', 401);
+        }
+        const session = await this.db.findOne(SessionEntity, {
+            where: [
+                { id:session_id,  user_id: user?.id },
+            ],
+        });
+
+        if (!session) {
+            throw new AppError('Session not found', 401);
+        }
+
+        return session?.is_active ?? false;
     }
 
     async findSessionById(id: number): Promise<SessionEntity | null> {

@@ -1,5 +1,5 @@
 import dbConnect from "../../frameworks/DBConfig";
-import UserRegistration from "../../usecases/userRegistration";
+import UserRegistration from "../../usecases/userUseCases/userRegistration";
 import UserRepository from "../repositories/UserRepository";
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
@@ -45,7 +45,7 @@ class UserController {
   }
 
   async logout(req: Request, res: Response): Promise<void> {
-
+    
     res.status(201).send({ message: "logout success" });
   }
 }
