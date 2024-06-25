@@ -1,15 +1,33 @@
 // src/interface-adapters/repositories/productRepository.ts
 
-import { EntityManager, EntityRepository, Repository } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import UserModel from '../../frameworks/DBConfig/models/UserModel';
 import UserEntity from '../../entities/User';
+import AppError from '../../frameworks/ServerConfig/utils/appError';
+import { Repository } from './Repository';
 
-export class UserRepository {
-    private db: EntityManager;
+export class UserRepository extends Repository {
     
     constructor(db: EntityManager) {
-        this.db = db;
+       super(db);
     }
+
+    async findUserByUsernameOrEmailOrPhone(field: string): Promise<UserModel | null> {
+        const user = await this.db.findOne(UserModel, {
+            where: [
+                { username: field },
+                { email: field },
+                { phone: field },
+            ],
+        });
+
+        if (!user) {
+            throw new AppError('User not found', 401);
+        }
+
+        return user;
+    }
+
     async register(user: UserEntity): Promise<UserModel> {
         const userEntity = new UserModel();
         

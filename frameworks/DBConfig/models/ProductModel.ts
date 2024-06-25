@@ -31,8 +31,9 @@ import Order from "./OrderModel"
     @ManyToOne(() => Company, (company) => company.products)
     company: Company
 
-    @OneToMany(() => Order, (order: any) => order.product)
+    @OneToMany(() => Order, (order) => order.product)
     orders: Order[]
+    
 }
 
 export default Product
