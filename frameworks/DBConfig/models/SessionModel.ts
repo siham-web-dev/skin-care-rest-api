@@ -2,11 +2,11 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "ty
 import User from "./UserModel"
 
 @Entity()
- class Session {
+ class UserSession {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToOne(() => User, (user) => user.sessions)
+    @ManyToOne(() => User, (user) => user.sessions, {onDelete: 'CASCADE', onUpdate: 'CASCADE', nullable: false})
     user: User
 
     @Column({default: true})
@@ -14,4 +14,4 @@ import User from "./UserModel"
 
 }
 
-export default Session
+export default UserSession

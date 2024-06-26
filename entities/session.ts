@@ -2,11 +2,11 @@
 
 class Session {
    id?: number;
-   user_id: number;
+   userId: number;
    is_active?: boolean = true;
 
   constructor(user_id: number) {
-    this.user_id = user_id;
+    this.userId = user_id;
   }
 }
 

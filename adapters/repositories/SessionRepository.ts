@@ -1,8 +1,9 @@
 import { EntityManager } from 'typeorm';
+import UserSession from '../../frameworks/DBConfig/models/SessionModel';
 import SessionEntity from '../../entities/session';
 import AppError from '../../frameworks/ServerConfig/utils/appError';
 import { Repository } from './Repository';
-import User from '../../entities/User';
+import User from '../../frameworks/DBConfig/models/UserModel';
 
 export class SessionRepository extends Repository {
 
@@ -10,12 +11,17 @@ export class SessionRepository extends Repository {
         super(db);
     }
      
-    async createSession(session: SessionEntity): Promise<SessionEntity> {
-        const { user_id } = session;
-        const sessionEntity = new SessionEntity(user_id);
+    async createSession(session: SessionEntity): Promise<UserSession> {
+        const createdSession = new UserSession();
+        const user = await this.db.findOne(User, {
+            where: [
+                { id: session.userId },
+            ]
+        })
+        createdSession.user = user as User;
+        await this.db.save(createdSession);
 
-        await this.db.save(sessionEntity);
-        return sessionEntity;
+        return createdSession;
     }
 
     // is auth middleware
@@ -28,27 +34,33 @@ export class SessionRepository extends Repository {
         if (!user) {
             throw new AppError('User not found with this username', 401);
         }
-        const session = await this.db.findOne(SessionEntity, {
+        const session = await this.db.findOne(UserSession, {
             where: [
-                { id:session_id,  user_id: user?.id },
+                { id:session_id },
             ],
+            relations: ['user']
         });
 
         if (!session) {
             throw new AppError('Session not found', 401);
         }
 
+        if (session.user.id !== user.id) {
+            throw new AppError('this session does not belong to this user', 401);
+        }
+
         return session?.is_active ?? false;
     }
 
     async findSessionById(id: number): Promise<SessionEntity | null> {
-        const session = await this.db.findOne(SessionEntity, {
+        const session = await this.db.findOne(UserSession, {
             where: [
                 { id },
             ],
+            relations: ['user']
         });
 
-        return session;
+        return { ...session, userId: session?.user.id as number };
     }
     
     // sign out 
@@ -63,17 +75,11 @@ export class SessionRepository extends Repository {
         }
 
         try {
-            session.is_active = false;
-            await this.db.save(session);
+           await this.db.update(UserSession, { id: session.id }, { is_active: false });
         } catch (error: any) {
             throw new Error(error);
         }
-
     }
-
-
- 
-
 
 }
 

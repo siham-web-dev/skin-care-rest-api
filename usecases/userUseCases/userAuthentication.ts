@@ -2,6 +2,7 @@ import SessionRepository from "../../adapters/repositories/SessionRepository";
 import UserRepository from "../../adapters/repositories/UserRepository";
 import AppError from "../../frameworks/ServerConfig/utils/appError";
 import { generate_token, verifyPassword } from "../../frameworks/ServerConfig/utils/auth";
+import SessionEntity from "../../entities/session";
 
 class UserAuthentication {
   private userRepository: UserRepository;
@@ -30,10 +31,8 @@ class UserAuthentication {
       throw new AppError("Password is wrong", 401);
     }
 
-    // create session
-    const sessionInput = {
-      user_id: user.id,
-    }
+    // create sessions
+    const sessionInput = new SessionEntity(user.id);
     const session = await this.sessionRepository.createSession(sessionInput);
  
     // generate token
