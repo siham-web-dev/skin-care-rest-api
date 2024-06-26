@@ -42,8 +42,7 @@ class UserAuthentication {
     }
     const token = generate_token(payload);
     
-    // return token
-    return token;
+    return token
   }
 }
 

@@ -17,13 +17,13 @@ class UserController {
   }
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { usernameOrEmailOrPhone, password } = req.body;
+      const { usernameOrEmailOrPhoneNumber, password } = req.body;
       const loginUseCase = new UserAuthentication(
         this.userRepository,
         this.sessionRepository
       );
       const token = await loginUseCase.execute(
-        usernameOrEmailOrPhone,
+        usernameOrEmailOrPhoneNumber,
         password
       );
 
