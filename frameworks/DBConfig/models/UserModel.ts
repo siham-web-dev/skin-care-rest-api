@@ -7,7 +7,7 @@ import * as dotenv from "dotenv"
 import UserSession from "./SessionModel"
 dotenv.config()
 
-const DEFAULT_USER_IMAGE_URL = `${process.env.STORAGE_DIR_PATH}/default.png`
+const DEFAULT_USER_IMAGE_URL = `${process.env.STORAGE_DIR_PATH}/users/default.png`
 
 @Entity()
 class User {

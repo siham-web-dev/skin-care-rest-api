@@ -54,7 +54,7 @@ class UserController {
         phone
       );
 
-      res.status(201).send({
+      res.status(200).send({
         username: user.username,
         role: user.role,
         email: user.email,
