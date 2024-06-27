@@ -10,21 +10,16 @@ class UserSignOut {
     
   async execute(session_id: number) {
 
-    const session = await this.sessionRepository.findSessionById(session_id);
+    const session: any = await this.sessionRepository.findSessionById(session_id);
     if (!session) {
-      throw new AppError("Session not found", 401);
+      throw new AppError("Session not found", 404);
     }
-
-    if (!session.is_active) {
+    if (session?.is_active) {
       throw new AppError("Session already desactivated", 400);
     }
 
-    try {
-      session.is_active = false;
-      await this.sessionRepository.desactivateSession(session_id);
-    } catch (error: any) {
-      throw new Error(error);
-    }
+    session.is_active = false;
+    await this.sessionRepository.desactivateSession(session_id);
   }
 }
 
