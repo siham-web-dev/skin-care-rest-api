@@ -7,8 +7,8 @@ const IsExistedUser = async (req: Request, res: Response, next: NextFunction) =>
     const { username, email, phone } = req.body;
 
     const user = await dbConnect
-        .getRepository(User)
-        .findOne({ where: [{ username }, { email }, { phone }] });
+        .manager
+        .findOne(User, { where: [{ username }, { email }, { phone }] });
 
     if (user) {
         return res.status(400).send({

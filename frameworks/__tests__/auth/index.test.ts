@@ -6,7 +6,7 @@ import { Express } from 'express';
 
 function auth_test(app: Express) {
   describe(" ================== Authentication system ====================== \n",  ()=> {
-    //register_unit_test(app);
+    register_unit_test(app);
     login_unit_test(app);
     logout_unit_test(app);
   })  
