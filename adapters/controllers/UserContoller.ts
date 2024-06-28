@@ -22,12 +22,12 @@ class UserController {
         this.userRepository,
         this.sessionRepository
       );
-      const token = await loginUseCase.execute(
+      const {token, company, userId} = await loginUseCase.execute(
         usernameOrEmailOrPhoneNumber,
         password
       );
 
-      res.status(201).send({ token, message: "login success" });
+      res.status(201).send({ token, userId, company, message: "login success" });
     } catch (error) {
       next(error);
     }

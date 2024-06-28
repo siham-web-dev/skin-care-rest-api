@@ -12,6 +12,18 @@ class UserRepository extends Repository {
        super(db);
     }
 
+    async findUserById(id: number): Promise<UserModel | null> {
+        const user = await this.db.findOne(UserModel, {
+            where: { id },
+        });
+
+        if (!user) {
+            throw new AppError('User not found', 401);
+        }
+
+        return user;
+    }
+
     async findUserByUsernameOrEmailOrPhone(field: string): Promise<UserModel | null> {
         const user = await this.db.findOne(UserModel, {
             where: [
@@ -19,6 +31,7 @@ class UserRepository extends Repository {
                 { email: field },
                 { phone: field },
             ],
+            relations: ['company'],
         });
 
         if (!user) {

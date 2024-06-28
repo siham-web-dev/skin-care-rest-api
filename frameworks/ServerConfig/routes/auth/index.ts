@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from "express";
-import UserController from "../../../../adapters/controllers/UserContoller";
 import { validateInputs } from "../../middlewares/validation";
 import isAuthenticated from "../../middlewares/IsAuth";
 import {
@@ -7,26 +6,27 @@ import {
   userRegistrationSchema,
 } from "../../validationSchemas/UserSchema";
 import IsExistedUser from "../../middlewares/IsExistedUser";
+import { InUserContoller } from "../../controllers/instances";
 const router = express.Router();
 
 router.post(
   "/login/",
   validateInputs(userLoginSchema),
-  (req: Request, res: Response, next: NextFunction) => new UserController().login(req, res, next)
+  (req: Request, res: Response, next: NextFunction) => InUserContoller.login(req, res, next)
 );
 
 router.post(
   "/register",
   validateInputs(userRegistrationSchema),
   IsExistedUser,
-  (req: Request, res: Response, next: NextFunction) => new UserController().register(req, res, next)
+  (req: Request, res: Response, next: NextFunction) => InUserContoller.register(req, res, next)
 );
 
 router.delete(
   "/logout",
   isAuthenticated,
   (req: Request, res: Response, next: NextFunction) =>
-  new UserController().logout(req, res, next)
+  InUserContoller.logout(req, res, next)
 );
 
 export default router;
