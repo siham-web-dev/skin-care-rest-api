@@ -4,9 +4,10 @@ import Company from "./CompanyModel"
 import Message from "./MessageModel"
 import { Role } from "../../../entities/types/enum"
 import * as dotenv from "dotenv"
+import UserSession from "./SessionModel"
 dotenv.config()
 
-const DEFAULT_USER_IMAGE_URL = `${process.env.STORAGE_DIR_PATH}/default.png`
+const DEFAULT_USER_IMAGE_URL = `${process.env.STORAGE_DIR_PATH}/users/default.png`
 
 @Entity()
 class User {
@@ -48,6 +49,9 @@ class User {
 
     @OneToOne(() => Company, (company) => company.user)
     company: Company
+
+    @OneToMany(() => UserSession, (session) => session.user)
+    sessions: UserSession[]
 }
 
 export default User

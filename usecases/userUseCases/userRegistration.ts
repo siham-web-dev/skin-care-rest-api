@@ -1,6 +1,6 @@
-import UserRepository from "../adapters/repositories/UserRepository";
-import { Role } from "../entities/types/enum";
-import User from "../entities/User";
+import UserRepository from "../../adapters/repositories/UserRepository";
+import { Role } from "../../entities/types/enum";
+import User from "../../entities/User";
 
 class UserRegistration {
   private userRepository: UserRepository;
