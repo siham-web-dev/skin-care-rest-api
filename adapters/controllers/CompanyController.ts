@@ -16,8 +16,8 @@ class CompanyController {
     this.userRepository = new UserRepository(db);
   }
 
-  async add(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const { userId } = req.body;
+  async add(req: any, res: Response, next: NextFunction): Promise<void> {
+    const { userId } = req.sessionInfo;
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     //console.log(files);
     
@@ -32,7 +32,7 @@ class CompanyController {
  
       await this.userRepository.findUserById(userId);
       const addCompanyUseCase = new CompanyAddOrUpdate(this.companyRepository);
-      const company = await addCompanyUseCase.execute("ADD", { ...req.body, logo_url });
+      const company = await addCompanyUseCase.execute("ADD", { ...req.body, userId, logo_url });
       
       res.status(200).send(company);
     } catch (error) {
@@ -40,8 +40,9 @@ class CompanyController {
     }
   }
   
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async update(req: any, res: Response, next: NextFunction): Promise<void> {
     const { id } = req.params;
+    const { userId } = req.sessionInfo
     const files = req.files as { [fieldname: string]: Express.Multer.File[] }
     try {
       const usecaseParameter = {
@@ -56,7 +57,11 @@ class CompanyController {
         usecaseParameter.logo_url = logo_url;
       }
 
-      await this.companyRepository.findCompanyById(+id);
+      const c = await this.companyRepository.findCompanyById(+id);
+      
+      if (c?.user?.id !== userId) {
+        throw new AppError('You are not allowed to update this company', 403);
+      }
       const updateCompanyUseCase = new CompanyAddOrUpdate(this.companyRepository);
       const company = await updateCompanyUseCase.execute("UPDATE", usecaseParameter);
       

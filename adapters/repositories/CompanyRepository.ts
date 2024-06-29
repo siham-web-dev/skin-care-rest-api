@@ -31,7 +31,13 @@ class CompanyRepository extends Repository {
             where: [
                 { id },
             ],
+
+            relations: ['user']
         });
+
+        if (!company) {
+            throw new AppError('Company not found', 404);
+        }
 
         return company
     }

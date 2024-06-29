@@ -42,9 +42,9 @@ class UserAuthentication {
       session_id: session.id as number,
       username: user.username,
     };
-    const token = generate_token(payload);
-
-    return { token, company: user.company, userId: user.id };
+    const token = await generate_token(payload);
+    
+    return { token, company: user.company };
   }
 }
 
