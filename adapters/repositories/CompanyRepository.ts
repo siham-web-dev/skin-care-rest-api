@@ -1,10 +1,12 @@
-// src/interface-adapters/repositories/productRepository.ts
-
 import { EntityManager } from 'typeorm';
 import { Repository } from './Repository';
 import Company from '../../entities/Company';
 import CompanyModel from '../../frameworks/DBConfig/models/CompanyModel';
 import AppError from '../../frameworks/ServerConfig/utils/appError';
+import fs from 'fs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 class CompanyRepository extends Repository {
     
@@ -18,8 +20,9 @@ class CompanyRepository extends Repository {
             user: {
                 id: company.userId
             }
-        });
-
+        })
+        await this.db.save(CompanyModel, newCompany)
+        
         return newCompany
     }
     
@@ -39,13 +42,20 @@ class CompanyRepository extends Repository {
             throw new AppError('Company not found', 404);
         }
 
+        if (company.logo_url) {
+            // remove previous image
+            const previous_filename = c.logo_url.replace(process.env.WEB_SERVER_HOST + ':' + process.env.WEB_SERVER_PORT, '.');
+            if (fs.existsSync(previous_filename)) {
+                fs.unlinkSync(previous_filename);
+            }
+        }
+
         const updatedCompany = await this.db.save(CompanyModel, {
             ...company
         });
 
         return updatedCompany
     }
-
 
 }
 
