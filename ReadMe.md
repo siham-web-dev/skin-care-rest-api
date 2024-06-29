@@ -9,7 +9,7 @@
 - typeorm + postgresql
 - validation with zod
 - authentication by email + username + phone_number
-  by using passport , express-session , cookies
+  by using jwt and saving session in DB
 - firebase for  ai assisstant bot
 
 <b>Architecture Pattern : </b> Clean Architecture Pattern
