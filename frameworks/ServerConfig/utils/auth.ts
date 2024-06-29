@@ -10,6 +10,7 @@ dotenv.config();
 type JWTPayload = {
   session_id: number;
   username: string;
+  userId?: number;
 };
 
 export function verifyPassword(password: string, hashedPassword: string) {
@@ -25,8 +26,6 @@ export async function generate_token({ session_id, username }: JWTPayload) {
 
 export async function verify_token(token: string) {
   const SECERET_KEY = process.env.JWT_TOKEN as string;
-  let ans = 0;
-  let sessionInfo: JWTPayload = { session_id: 0, username: "" };
   const decoded = await jwt.verify(token, SECERET_KEY);
   if (!decoded) {
     throw new AppError("Invalid token", 401);
@@ -35,15 +34,15 @@ export async function verify_token(token: string) {
   const { session_id, username } = decoded as JWTPayload;
   const db = dbConnect.manager;
   const sessionRepository = new SessionRepository(db);
-  const isActiveSession =
+  const { is_active, userId, role } =
     await sessionRepository.findSessionBySessionIdAndUserName(
       session_id,
       username
     );
-  if (!isActiveSession) {
+  if (!is_active) {
     throw new AppError("Invalid token ( session is not active )", 401);
   }
-  sessionInfo = { session_id, username };
+  const sessionInfo = { session_id, username, userId, role };
 
   return sessionInfo;
 }
@@ -52,6 +51,10 @@ export const getTokenFromAuthorizationHeaderRequest = (
   req: Request
 ): string => {
   const { authorization } = req.headers;
+  if (!authorization) {
+    throw new AppError("you need to login", 401);
+  }
+
   const token = authorization?.replace("Bearer ", "");
 
   return token as string;

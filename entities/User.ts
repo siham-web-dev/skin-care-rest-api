@@ -12,10 +12,6 @@ class User {
    role: Role;
    email: string;
    phone: string;
-   image_url?: string;
-   orders?: Order[];
-   messages?: Message[];
-   company?: Company;
 
   constructor(
     firstName: string,

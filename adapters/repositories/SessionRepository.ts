@@ -25,7 +25,7 @@ export class SessionRepository extends Repository {
     }
 
     // is auth middleware
-    async findSessionBySessionIdAndUserName(session_id: number, username: string): Promise<boolean> {
+    async findSessionBySessionIdAndUserName(session_id: number, username: string) {
         const user = await this.db.findOne(User, {
             where: [
                 { username },
@@ -49,7 +49,13 @@ export class SessionRepository extends Repository {
             throw new AppError('this session does not belong to this user', 401);
         }
 
-        return session?.is_active ?? false;
+        const userInfo = {
+            is_active:  session.is_active,
+            userId: user.id,
+            role: user.role
+        }
+
+        return userInfo;
     }
 
     async findSessionById(id: number): Promise<SessionEntity | null> {
