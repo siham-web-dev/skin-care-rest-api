@@ -3,7 +3,7 @@
 ### Libraries used
 
 - express + typescript
-- socket.io + redis
+- socket.io
 - logger with pino and pino-pretty + cors + dotenv + swagger + jest + supertest
 - docker
 - typeorm + postgresql
