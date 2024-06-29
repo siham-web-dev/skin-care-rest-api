@@ -21,3 +21,7 @@
 ### How to run server ?
 
 `npm run dev`
+
+### How to run server ?
+
+`npm run test`
