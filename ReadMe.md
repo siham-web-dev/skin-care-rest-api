@@ -22,6 +22,6 @@
 
 `npm run dev`
 
-### How to run server ?
+### How to run test ?
 
 `npm run test`
