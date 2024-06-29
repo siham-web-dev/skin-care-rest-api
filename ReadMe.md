@@ -10,7 +10,7 @@
 - validation with zod
 - authentication by email + username + phone_number
   by using passport , express-session , cookies
-- firebase for uploading images + ai assisstant bot
+- firebase for  ai assisstant bot
 
 <b>Architecture Pattern : </b> Clean Architecture Pattern
 
