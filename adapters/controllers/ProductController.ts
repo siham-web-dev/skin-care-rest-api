@@ -17,7 +17,7 @@ class CompanyController {
   }
 
   async add(req: any, res: Response, next: NextFunction): Promise<void> {
-    const { id: companyID } = req.sessionInfo.company;
+    const companyID = req.sessionInfo.company.id;
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
     try {
@@ -35,8 +35,8 @@ class CompanyController {
       const addProductUseCase = new ProductAdd(this.productRepository);
         
       const product: Product = new Product(req.body.name, req.body.description, req.body.ingredients,
-        req.body.how_to_use, req.body.quantity, req.body.price, image_url, companyID);
-        
+        req.body.how_to_use, req.body.quantity, req.body.price, image_url);
+      product.companyID = companyID;  
       const newProduct = await addProductUseCase.execute(product);
 
       res.status(200).send(newProduct);
@@ -63,6 +63,7 @@ class CompanyController {
       }
 
       const product = await this.productRepository.findProductById(+id);
+      
       if (product?.company.id !== companyID) {
         throw new AppError('You are not allowed to update this product', 403);
       }
@@ -91,8 +92,9 @@ class CompanyController {
         this.productRepository
       );
       await deleteProductUseCase.execute(+id);
-    }
+      res.status(200).send({ message: "The product has been deleted successfully" });
 
+    }
     catch (error) {
       next(error);
     }

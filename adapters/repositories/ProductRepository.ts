@@ -14,7 +14,10 @@ class ProductRepository extends Repository {
 
     async addProduct(product: Omit<Product, 'id'>): Promise<ProductModel> {
         const newProduct = await this.db.create(ProductModel, {
-           ...product
+            ...product,
+            company: {
+                id: product.companyID
+            }
         })
         await this.db.save(ProductModel, newProduct)
         
@@ -26,6 +29,7 @@ class ProductRepository extends Repository {
             where: [
                 { id },
             ],
+            relations: ['company']
         });
 
         if (!product) {

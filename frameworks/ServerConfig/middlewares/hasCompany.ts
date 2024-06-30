@@ -7,7 +7,8 @@ const hasCompany = async (req: any, res: Response, next: NextFunction) => {
   const { userId } = req.sessionInfo;
   const db = dbConnect.manager;
   const user: any = await new UserRepository(db).findUserById(userId);
-    if (user.company) {
+    
+  if (user.company) {
     req.sessionInfo.company = user.company;
     next();
   } else {

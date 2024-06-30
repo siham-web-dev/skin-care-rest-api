@@ -19,8 +19,7 @@ class CompanyController {
   async add(req: any, res: Response, next: NextFunction): Promise<void> {
     const { userId } = req.sessionInfo;
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-    //console.log(files);
-    
+
     try {
       const hasLogoProperty = "logo" in files;
       if (!hasLogoProperty) {
