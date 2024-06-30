@@ -1,6 +1,3 @@
-import Company from "./Company";
-import Message from "./Message";
-import Order from "./Order";
 import { Role } from "./types/enum";
 
 class User {

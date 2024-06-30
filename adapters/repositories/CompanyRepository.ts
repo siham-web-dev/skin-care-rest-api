@@ -5,6 +5,7 @@ import CompanyModel from '../../frameworks/DBConfig/models/CompanyModel';
 import AppError from '../../frameworks/ServerConfig/utils/appError';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import { removeExistedImage } from '../../frameworks/ServerConfig/utils/files';
 
 dotenv.config();
 
@@ -49,11 +50,7 @@ class CompanyRepository extends Repository {
         }
 
         if (company.logo_url) {
-            // remove previous image
-            const previous_filename = c.logo_url.replace(process.env.WEB_SERVER_HOST + ':' + process.env.WEB_SERVER_PORT, '.');
-            if (fs.existsSync(previous_filename)) {
-                fs.unlinkSync(previous_filename);
-            }
+           removeExistedImage(c.logo_url);
         }
 
         const updatedCompany = await this.db.save(CompanyModel, {
