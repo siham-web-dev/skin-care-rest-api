@@ -44,7 +44,7 @@ class UserAuthentication {
     };
     const token = await generate_token(payload);
     
-    return { token, company: user.company };
+    return { token, company: user.company, role: user.role };
   }
 }
 
