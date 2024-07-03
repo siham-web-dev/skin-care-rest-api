@@ -15,6 +15,7 @@ class UserRepository extends Repository {
     async findUserById(id: number): Promise<UserModel | null> {
         const user = await this.db.findOne(UserModel, {
             where: { id },
+            relations: ['company'],
         });
 
         if (!user) {
