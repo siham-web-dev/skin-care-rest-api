@@ -11,6 +11,29 @@ class ProductRepository extends Repository {
     constructor(db: EntityManager) {
        super(db);
     }
+   
+    async getTotalProductsForCompany(companyID: number): Promise<number> {
+        const productsTotal = await this.db.count(ProductModel, {
+            where: [
+                { company: { id: companyID } },
+            ]
+        })
+
+        return productsTotal
+    }
+    async findProductsByCompanyID(companyID: number, limit: number, skip: number): Promise<ProductModel[] | null> {
+        const products = await this.db.find(ProductModel, {
+            where: [
+                { company: { id: companyID } },
+            ],
+            skip: skip,
+            take: limit,
+            order: {
+                name: 'ASC'
+            },
+        });
+        return products
+    }
 
     async addProduct(product: Omit<Product, 'id'>): Promise<ProductModel> {
         const newProduct = await this.db.create(ProductModel, {
