@@ -43,8 +43,8 @@ class CompanyRepository extends Repository {
         return company
     }
 
-    async updateCompany(company: Company, id: number): Promise<CompanyModel> {
-        const c = await this.findCompanyById(id);
+    async updateCompany(company: Company, id: number) {
+        let c = await this.findCompanyById(id);
         if (!c) {
             throw new AppError('Company not found', 404);
         }
@@ -53,10 +53,24 @@ class CompanyRepository extends Repository {
            removeExistedImage(c.logo_url);
         }
 
-        const updatedCompany = await this.db.save(CompanyModel, {
-            ...company
-        });
+        c.email = company.email;
+        c.address = company.address;
+        c.phone = company.phone;
+        c.name = company.name;
 
+        if (company.logo_url) {
+            c.logo_url = company.logo_url ;
+        }
+
+        await this.db.save(CompanyModel, c);
+        const updatedCompany = {
+            id: c.id,
+            name: c.name,
+            email: c.email,
+            address: c.address,
+            phone: c.phone,
+            logo_url: c.logo_url
+        }
         return updatedCompany
     }
 
