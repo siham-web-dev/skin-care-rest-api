@@ -5,6 +5,18 @@ import productsRouters from "./products";
 
 const router = express.Router();
 
+/** 
+   * @swagger
+   * '/'
+   * get:
+   *   summary: home route
+   *   description: home route
+   *   responses:
+   *    '200':
+   *       ok
+   *    '500':
+   *       internal server error
+   * */
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.send("Hello api version1 !");
 });
