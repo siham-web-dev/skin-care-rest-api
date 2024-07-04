@@ -7,6 +7,7 @@ import ProductAdd from "../../usecases/productUseCases/ProductAdd";
 import Product from "../../entities/Product";
 import ProductUpdate from "../../usecases/productUseCases/ProductUpdate";
 import ProductDelete from "../../usecases/productUseCases/ProductDelete";
+import GetProductsForAdmin from "../../usecases/productUseCases/getProductsForAdmin";
 
 class CompanyController {
   private productRepository: ProductRepository;
@@ -14,6 +15,38 @@ class CompanyController {
   constructor() {
     const db = dbConnect.manager;
     this.productRepository = new ProductRepository(db);
+  }
+
+  async getAllProductsOfCompany(req: any, res: Response, next: NextFunction) {
+    const companyID = req.sessionInfo.company.id;
+    const page  = parseInt(req.query.page) || 1;
+    const  limit  = req.query.limit || 10;
+
+    try {
+      const GetProductsForAdminUseCase = new GetProductsForAdmin(
+        this.productRepository
+      );
+
+      console.log(page, limit);
+      
+
+      const products = await GetProductsForAdminUseCase.execute(
+        companyID,
+        page,
+        limit
+      );
+      const totalProducts =
+        await this.productRepository.getTotalProductsForCompany(companyID);
+
+      const pages = Math.ceil(totalProducts / limit);
+      const nextPage = page < pages ? page + 1 : null;
+
+      res
+        .status(200)
+        .send({ products, nextPage, pages, totalProducts, current_page: page });
+    } catch (error) {
+      next(error);
+    }
   }
 
   async add(req: any, res: Response, next: NextFunction): Promise<void> {
@@ -33,10 +66,17 @@ class CompanyController {
       const image_url = verifyImage(image);
 
       const addProductUseCase = new ProductAdd(this.productRepository);
-        
-      const product: Product = new Product(req.body.name, req.body.description, req.body.ingredients,
-        req.body.how_to_use, req.body.quantity, req.body.price, image_url);
-      product.companyID = companyID;  
+
+      const product: Product = new Product(
+        req.body.name,
+        req.body.description,
+        req.body.ingredients,
+        req.body.how_to_use,
+        req.body.quantity,
+        req.body.price,
+        image_url
+      );
+      product.companyID = companyID;
       const newProduct = await addProductUseCase.execute(product);
 
       res.status(200).send(newProduct);
@@ -63,16 +103,12 @@ class CompanyController {
       }
 
       const product = await this.productRepository.findProductById(+id);
-      
+
       if (product?.company.id !== companyID) {
-        throw new AppError('You are not allowed to update this product', 403);
+        throw new AppError("You are not allowed to update this product", 403);
       }
-      const updateProductUseCase = new ProductUpdate(
-        this.productRepository
-      );
-      const company = await updateProductUseCase.execute(
-        usecaseParameter
-      );
+      const updateProductUseCase = new ProductUpdate(this.productRepository);
+      const company = await updateProductUseCase.execute(usecaseParameter);
 
       res.status(200).send(company);
     } catch (error) {
@@ -86,19 +122,17 @@ class CompanyController {
     try {
       const product = await this.productRepository.findProductById(+id);
       if (product?.company.id !== companyID) {
-        throw new AppError('You are not allowed to delete this product', 403);
+        throw new AppError("You are not allowed to delete this product", 403);
       }
-      const deleteProductUseCase = new ProductDelete(
-        this.productRepository
-      );
+      const deleteProductUseCase = new ProductDelete(this.productRepository);
       await deleteProductUseCase.execute(+id);
-      res.status(200).send({ message: "The product has been deleted successfully" });
-
-    }
-    catch (error) {
+      res
+        .status(200)
+        .send({ message: "The product has been deleted successfully" });
+    } catch (error) {
       next(error);
     }
   }
-} 
+}
 
 export default CompanyController;
