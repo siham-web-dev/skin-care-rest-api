@@ -23,6 +23,8 @@ class CompanyController {
     const limit = parseInt(req.query.limit as string) || 10;
     const keyword = req.query.keyword || "";
     const skip = (page - 1) * limit;
+    const price_lte = parseFloat(req.query.price_lte as string) || 0;
+    const price_gte = parseFloat(req.query.price_gte as string) || 0;
 
     try {
       const GetProductsUseCase = new GetProducts(
@@ -31,7 +33,9 @@ class CompanyController {
       const {products, totalProducts} = await GetProductsUseCase.execute(
         keyword as string,
         limit,
-        skip
+        skip,
+        price_lte,
+        price_gte
       );
 
       const pages = Math.ceil(totalProducts / limit);

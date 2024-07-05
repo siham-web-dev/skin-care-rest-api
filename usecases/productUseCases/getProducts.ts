@@ -16,12 +16,16 @@ class GetProducts {
   async execute(
     keyword: string,
     limit: number,
-    skip: number
+    skip: number,
+    price_lte?: number,
+    price_gte?: number
   ): Promise<GetProductsOutput> {
     const {products, totalProducts} = await this.productRepository.findProductsByKeyword(
       keyword,
       limit,
-      skip
+      skip,
+      price_lte,
+      price_gte
     )
     return { products, totalProducts };
   }
