@@ -13,6 +13,12 @@ import { ProductSchema } from "../../validationSchemas/ProductSchema";
 const router = express.Router();
 
 router.get(
+  "/",
+  (req: Request, res: Response, next: NextFunction) =>
+    InProductController.getProducts(req, res, next)
+);
+
+router.get(
   "/admin/",
   IsAuthenticated,
   IsAdmin,

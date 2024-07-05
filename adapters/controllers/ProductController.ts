@@ -8,6 +8,7 @@ import Product from "../../entities/Product";
 import ProductUpdate from "../../usecases/productUseCases/ProductUpdate";
 import ProductDelete from "../../usecases/productUseCases/ProductDelete";
 import GetProductsForAdmin from "../../usecases/productUseCases/getProductsForAdmin";
+import GetProducts from "../../usecases/productUseCases/getProducts";
 
 class CompanyController {
   private productRepository: ProductRepository;
@@ -15,6 +16,37 @@ class CompanyController {
   constructor() {
     const db = dbConnect.manager;
     this.productRepository = new ProductRepository(db);
+  }
+
+  async getProducts(req: Request, res: Response, next: NextFunction) {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const keyword = req.query.keyword || "";
+    const skip = (page - 1) * limit;
+    const price_lte = parseFloat(req.query.price_lte as string) || 0;
+    const price_gte = parseFloat(req.query.price_gte as string) || 0;
+
+    try {
+      const GetProductsUseCase = new GetProducts(
+        this.productRepository
+      );
+      const {products, totalProducts} = await GetProductsUseCase.execute(
+        keyword as string,
+        limit,
+        skip,
+        price_lte,
+        price_gte
+      );
+
+      const pages = Math.ceil(totalProducts / limit);
+      const nextPage = page < pages ? page + 1 : null;
+     
+      res.status(200)
+        .send({ products, nextPage, pages, totalProducts, current_page: page });
+    }
+    catch (error) {
+      next(error);
+    }
   }
 
   async getAllProductsOfCompany(req: any, res: Response, next: NextFunction) {

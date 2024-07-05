@@ -1,4 +1,4 @@
-import { EntityManager } from 'typeorm';
+import { Between, EntityManager, LessThanOrEqual, Like } from 'typeorm';
 import { Repository } from './Repository';
 import AppError from '../../frameworks/ServerConfig/utils/appError';
 import ProductModel from '../../frameworks/DBConfig/models/ProductModel';
@@ -20,6 +20,33 @@ class ProductRepository extends Repository {
         })
 
         return productsTotal
+    }
+
+    async findProductsByKeyword(keyword: string, limit: number, skip: number,
+        price_lte?: number, price_gte?: number) {
+        const query = price_lte && price_gte ? [
+            { name: Like(`%${keyword}%`), price: Between(price_gte, price_lte) },
+            { description:  Like(`%${keyword}%`), price: Between(price_gte, price_lte) },
+        ] :
+        [
+            { name: Like(`%${keyword}%`) },
+            { description:  Like(`%${keyword}%`) },
+        ]
+        
+        const totalProducts = await this.db.count(ProductModel, {
+            where: query,
+        })
+
+        const products = await this.db.find(ProductModel, {
+            where: query,
+            skip: skip,
+            take: limit,
+            order: {
+                name: 'ASC'
+            },
+        });
+
+        return {products, totalProducts}
     }
     async findProductsByCompanyID(companyID: number, limit: number, skip: number): Promise<ProductModel[] | null> {
         const products = await this.db.find(ProductModel, {
