@@ -1,4 +1,4 @@
-import { EntityManager } from 'typeorm';
+import { EntityManager, Like } from 'typeorm';
 import { Repository } from './Repository';
 import AppError from '../../frameworks/ServerConfig/utils/appError';
 import ProductModel from '../../frameworks/DBConfig/models/ProductModel';
@@ -20,6 +20,28 @@ class ProductRepository extends Repository {
         })
 
         return productsTotal
+    }
+    async findProductsByKeyword(keyword: string, limit: number, skip: number) {
+        const totalProducts = await this.db.count(ProductModel, {
+            where: [
+                { name: Like(`%${keyword}%`) },
+                { description:  Like(`%${keyword}%`) },
+            ],
+        })
+
+        const products = await this.db.find(ProductModel, {
+            where: [
+                { name:  Like(`%${keyword}%`) },
+                { description:  Like(`%${keyword}%`) },
+            ],
+            skip: skip,
+            take: limit,
+            order: {
+                name: 'ASC'
+            },
+        });
+
+        return {products, totalProducts}
     }
     async findProductsByCompanyID(companyID: number, limit: number, skip: number): Promise<ProductModel[] | null> {
         const products = await this.db.find(ProductModel, {
