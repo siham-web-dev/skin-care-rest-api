@@ -11,6 +11,8 @@ class ProductRepository extends Repository {
     constructor(db: EntityManager) {
        super(db);
     }
+
+    
    
     async getTotalProductsForCompany(companyID: number): Promise<number> {
         const productsTotal = await this.db.count(ProductModel, {

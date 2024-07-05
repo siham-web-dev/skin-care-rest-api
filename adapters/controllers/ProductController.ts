@@ -9,6 +9,7 @@ import ProductUpdate from "../../usecases/productUseCases/ProductUpdate";
 import ProductDelete from "../../usecases/productUseCases/ProductDelete";
 import GetProductsForAdmin from "../../usecases/productUseCases/getProductsForAdmin";
 import GetProducts from "../../usecases/productUseCases/getProducts";
+import GetProductById from "../../usecases/productUseCases/getProductById";
 
 class CompanyController {
   private productRepository: ProductRepository;
@@ -16,6 +17,21 @@ class CompanyController {
   constructor() {
     const db = dbConnect.manager;
     this.productRepository = new ProductRepository(db);
+  }
+
+  async getProductById(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const type = req.query.type as string || "";
+    try {
+      const GetProductByIdUseCase = new GetProductById(
+        this.productRepository
+      )
+
+      const result = await GetProductByIdUseCase.execute(+id, type);
+      res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
   }
 
   async getProducts(req: Request, res: Response, next: NextFunction) {

@@ -1,9 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
-import { InCompanyController, InProductController } from "../../controllers/instances";
+import { InProductController } from "../../controllers/instances";
 import { validateInputs } from "../../middlewares/validation";
-import {
-  companySchema
-} from "../../validationSchemas/CompanySchema";
+
 import IsAuthenticated from "../../middlewares/IsAuth";
 import { IsAdmin } from "../../middlewares/roles";
 import uploadFile from "../../middlewares/upload";
@@ -16,6 +14,12 @@ router.get(
   "/",
   (req: Request, res: Response, next: NextFunction) =>
     InProductController.getProducts(req, res, next)
+);
+
+router.get(
+  "/:id",
+  (req: Request, res: Response, next: NextFunction) =>
+    InProductController.getProductById(req, res, next)
 );
 
 router.get(
