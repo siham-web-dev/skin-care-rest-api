@@ -5,6 +5,7 @@ import GetAllRooms from "../../usecases/roomUsesCases/getAllrooms";
 import UserRepository from "../repositories/UserRepository";
 import GetRoomBySlug from "../../usecases/roomUsesCases/getRoomBySlug";
 import CreateRoom from "../../usecases/roomUsesCases/createNewRoom";
+import DeleteRoom from "../../usecases/roomUsesCases/deleteRoom";
 
 class RoomController {
     private roomRepository: RoomRepository
@@ -52,7 +53,17 @@ class RoomController {
       }
   }
 
-  async delete(req: any, res: Response, next: NextFunction): Promise<void> {}
+    async delete(req: any, res: Response, next: NextFunction): Promise<void> {
+        const { slug } = req.params;
+
+        try {
+            const deleteRoomUseCase = new DeleteRoom(this.roomRepository);
+            await deleteRoomUseCase.execute(slug);
+            res.status(200).send({ message: "The room has been deleted successfully" });
+        } catch (error) {
+            next(error);
+        }
+  }
 }
 
 export default RoomController;

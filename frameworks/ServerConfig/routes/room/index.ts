@@ -29,7 +29,7 @@ router.post(
 );
 
 router.delete(
-  "/:id",
+  "/:slug",
   IsAuthenticated,
   (req: Request, res: Response, next: NextFunction) =>
     InRoomController.delete(req, res, next)

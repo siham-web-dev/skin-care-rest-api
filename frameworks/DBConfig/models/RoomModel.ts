@@ -10,7 +10,7 @@ class Room {
     @Column()
     title: string
 
-    @Column()
+    @Column({ unique: true, nullable: true })
     slug: string
 
     @ManyToOne(() => User, (user) => user.rooms)

@@ -22,18 +22,28 @@ class RoomRepository extends Repository {
     }
 
     return room;
-    }
-    
-    async create(room: Room): Promise<RoomModel> {
-        const newRoom = this.db.create(RoomModel, room);
-        const createdRoom = await this.db.save(newRoom);
-        const { title } = createdRoom;
-        
-        const t = title.replace(/\s+/g, '-').toLowerCase();
-        createdRoom.slug = t;
+  }
 
-        return await this.db.save(RoomModel, createdRoom);
-    }
+  async create(room: Room): Promise<RoomModel> {
+    const newRoom = this.db.create(RoomModel, {
+      ...room,
+      user: {
+        id: room.userId,
+      },
+    });
+    const createdRoom = await this.db.save(newRoom);
+    const { title } = createdRoom;
+
+    const t = title.replace(/\s+/g, "-").toLowerCase();
+    createdRoom.slug = t;
+
+    return await this.db.save(RoomModel, createdRoom);
+  }
+
+  async delete(slug: string): Promise<void> {
+    const room = await this.getBySlug(slug);
+    await this.db.remove(room);
+  }
 }
 
 export default RoomRepository;
