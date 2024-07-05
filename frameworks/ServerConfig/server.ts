@@ -4,7 +4,6 @@ import cors from "cors";
 import "reflect-metadata";
 import ErrorHandler from "./middlewares/error";
 import bodyParser from "body-parser";
-import path from "path";
 
 function createServer(): Express {
   const app: Express = express();

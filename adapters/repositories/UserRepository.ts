@@ -41,7 +41,14 @@ class UserRepository extends Repository {
 
         return user;
     }
-
+    
+    async getUserRooms(userId: number): Promise<any> {
+        const user: any = await this.db.findOne(UserModel, {
+            where: { id: userId },
+            relations: ['rooms'],
+        });
+        return user.rooms
+    }
     async register(user: UserEntity): Promise<UserModel> {
         const userEntity = new UserModel();
         

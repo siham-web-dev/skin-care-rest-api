@@ -6,6 +6,7 @@ import Order from "./models/OrderModel";
 import User from "./models/UserModel";
 import Company from "./models/CompanyModel";
 import UserSession from "./models/SessionModel";
+import Room from "./models/RoomModel";
 dotenv.config();
 
  const dbConnect = new DataSource({
@@ -17,7 +18,7 @@ dotenv.config();
     database: process.env.DB_NAME,
     synchronize: true,
     logging: true,
-    entities: [Product, Company, User, Order, Message, UserSession],
+    entities: [Product, Company, User, Order, Message, UserSession, Room],
     subscribers: [],
     migrations: [],
  })

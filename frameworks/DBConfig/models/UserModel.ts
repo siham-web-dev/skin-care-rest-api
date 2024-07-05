@@ -5,6 +5,7 @@ import Message from "./MessageModel"
 import { Role } from "../../../entities/types/enum"
 import * as dotenv from "dotenv"
 import UserSession from "./SessionModel"
+import Room from "./RoomModel"
 dotenv.config()
 
 const DEFAULT_USER_IMAGE_URL = `${process.env.STORAGE_DIR_PATH}/users/default.png`
@@ -44,14 +45,14 @@ class User {
     @OneToMany(() => Order, (order) => order.user)
     orders: Order[]
 
-    @OneToMany(() => Message, (message) => message.user)
-    messages: Message[]
-
     @OneToOne(() => Company, (company) => company.user)
     company: Company
 
     @OneToMany(() => UserSession, (session) => session.user)
     sessions: UserSession[]
+
+    @OneToMany(() => Room, (room) => room.user)
+    rooms: Room[]
 }
 
 export default User

@@ -2,9 +2,17 @@ import createServer from "./ServerConfig/server";
 import * as dotenv from "dotenv";
 import logger from "./ServerConfig/utils/logger";
 import dbConnect from "./DBConfig";
-
-const server = createServer();
+import http from "http";
+import { Server } from "socket.io";
 dotenv.config();
+
+const app = createServer();
+const server = http.createServer(app);
+const io = new Server(server)
+
+io.on('connection', (socket) => {
+    console.log(`user connected: ${socket.id}`)
+})
 
 server.listen(process.env.WEB_SERVER_PORT, () => {
     logger.info(`Server is running on port ${process.env.WEB_SERVER_PORT}`);
