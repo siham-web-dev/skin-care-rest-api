@@ -10,7 +10,7 @@ class Message {
     @Column()
     content: string
 
-    @Column()
+    @Column({ type: "bigint" })
     sentAt: number
     
     @Column()
