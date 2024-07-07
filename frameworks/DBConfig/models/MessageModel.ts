@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm"
-import User from "./UserModel"
 import { SenderType } from "../../../entities/types/enum"
+import Room from "./RoomModel"
 
 @Entity()
 class Message {
@@ -10,14 +10,14 @@ class Message {
     @Column()
     content: string
 
-    @Column()
+    @Column({ type: "bigint" })
     sentAt: number
     
     @Column()
     senderType: SenderType
-
-    @ManyToOne(() => User, (user) => user.messages)
-    user: User
+    
+    @ManyToOne(() => Room, (room) => room.messages, { onDelete: "CASCADE" })
+    room: Room
  
 }
 
