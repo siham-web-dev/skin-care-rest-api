@@ -15,8 +15,8 @@ class Message {
     
     @Column()
     senderType: SenderType
-
-    @ManyToOne(() => Room, (room) => room.messages)
+    
+    @ManyToOne(() => Room, (room) => room.messages, { onDelete: "CASCADE" })
     room: Room
  
 }
