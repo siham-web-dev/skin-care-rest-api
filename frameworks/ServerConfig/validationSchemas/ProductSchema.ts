@@ -6,5 +6,5 @@ export const ProductSchema = z.object({
     ingredients: z.string().min(74).max(400),
     how_to_use: z.string().min(56).max(400),
     quantity: z.string().regex(/^\d+$/).transform((value) => parseInt(value)),
-    price: z.string().regex(/^\d+.\d{2}$/).transform((value) => parseFloat(value))
+    price: z.string().transform((value) => parseFloat(value))
 });

@@ -11,6 +11,15 @@ import { ProductSchema } from "../../validationSchemas/ProductSchema";
 const router = express.Router();
 
 router.get(
+  "/company/",
+  IsAuthenticated,
+  IsAdmin,
+  hasCompany,
+  (req: Request, res: Response, next: NextFunction) =>
+    InProductController.getAllProductsOfCompany(req, res, next)
+)
+
+router.get(
   "/",
   (req: Request, res: Response, next: NextFunction) =>
     InProductController.getProducts(req, res, next)
@@ -21,15 +30,6 @@ router.get(
   (req: Request, res: Response, next: NextFunction) =>
     InProductController.getProductById(req, res, next)
 );
-
-router.get(
-  "/admin/",
-  IsAuthenticated,
-  IsAdmin,
-  hasCompany,
-  (req: Request, res: Response, next: NextFunction) =>
-    InProductController.getAllProductsOfCompany(req, res, next)
-)
 
 router.post(
   "/",
