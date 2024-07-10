@@ -17,12 +17,6 @@ class Order {
     @Column()
     quantity: number
 
-    @Column()
-    price: number
-
-    @Column()
-    image_url: string
-
     @ManyToOne(() => Product, (product) => product.orders)
     product: Product
 
