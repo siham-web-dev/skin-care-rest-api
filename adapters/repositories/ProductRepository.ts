@@ -50,6 +50,24 @@ class ProductRepository extends Repository {
 
         return {products, totalProducts}
     }
+    async getOrdersOfProductOfCompany(id: number) {
+        const products = await this.db.find(ProductModel, {
+            where: [
+                {
+                    company : { id }
+               }
+            ],
+            relations: ['orders']
+        })
+        const orders: any = []
+        products.forEach(product => {
+           if (product.orders.length>0) {
+               orders.push(...product.orders)
+           }
+        })
+        
+        return {count : orders.length, orders}
+    }
     async findProductsByCompanyID(companyID: number, limit: number, skip: number): Promise<ProductModel[] | null> {
         const products = await this.db.find(ProductModel, {
             where: [

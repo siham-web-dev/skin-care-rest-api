@@ -13,6 +13,14 @@ router.post(
         InOrderController.createOrder(req, res, next)
 );
 
+router.get(
+    "/",
+    IsAuthenticated,
+    IsAdmin,
+    (req: any, res: Response, next: NextFunction) =>
+        InOrderController.getOrdersforAdmins(req, res, next)
+);
+
 router.patch(
     "/:id/status",
     IsAuthenticated,

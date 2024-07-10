@@ -15,9 +15,10 @@ class UpdateOrderStatus {
     private orderRepository: OrderRepository;
     private productRepository: ProductRepository
 
-  constructor(orderRepository: OrderRepository) {
+  constructor(orderRepository: OrderRepository, productRepository: ProductRepository) {
     this.orderRepository = orderRepository;
-    }
+    this.productRepository = productRepository
+  }
     
   async execute(id: number, status: Status) { 
     const order =  await this.orderRepository.getOrderById(id);
