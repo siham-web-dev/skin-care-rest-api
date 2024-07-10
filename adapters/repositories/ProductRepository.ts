@@ -62,7 +62,12 @@ class ProductRepository extends Repository {
         const orders: any = []
         products.forEach(product => {
            if (product.orders.length>0) {
-               orders.push(...product.orders)
+               for (let i = 0; i < product.orders.length; i++) {
+                   const order = product.orders[i];
+                   const productName = product.name;
+                   const productId = product.id;
+                   orders.push({...order, productName, productId})
+               }
            }
         })
         
