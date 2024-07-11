@@ -25,9 +25,19 @@ class UpdateOrderStatus {
     await this.orderRepository.updateStatus(id, status);
     
      if (status === Status.ACCEPTED) {
-        const product: any = await this.productRepository.findProductById(order.product.id);
-        product.quantity = product.quantity - order.quantity;
-        await this.productRepository.updateProduct(product);
+       const product: any = await this.productRepository.findProductById(order.product.id);
+       const newQuantity = product.quantity - order.quantity;
+       
+       const p = {
+         id: product.id,
+         name: product.name,
+         quantity: newQuantity,
+         price: product.price,
+         description: product.description,
+         ingredients: product.ingredients,
+         how_to_use: product.how_to_use,
+        } 
+        await this.productRepository.updateProduct(p);
     }
   }
 }

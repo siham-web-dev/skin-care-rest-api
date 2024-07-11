@@ -59,8 +59,23 @@ class OrderController {
       } catch (error) {
         next(error)
       }
-    }
+  }
 
+   async getAnalytics(req: any, res: Response, next: NextFunction) {
+    const { userId } = req.sessionInfo
+    try {
+      const user: any = await this.userRepository.findUserById(userId)
+      if (!user.company) {
+       res.status(200).send({ analytics: null })
+
+      }
+      const analytics = await this.productRepository.getAnalytics(user.company.id)
+      res.status(200).send({ analytics })
+    } catch (error) {
+      next(error)
+     }
+  }
+  
 }
 
 

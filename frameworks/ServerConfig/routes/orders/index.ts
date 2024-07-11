@@ -21,6 +21,14 @@ router.get(
         InOrderController.getOrdersforAdmins(req, res, next)
 );
 
+router.get(
+    "/analytics",
+    IsAuthenticated,
+    IsAdmin,
+    (req: any, res: Response, next: NextFunction) =>
+        InOrderController.getAnalytics(req, res, next)
+);
+
 router.patch(
     "/:id/status",
     IsAuthenticated,

@@ -7,7 +7,7 @@ class Product {
     how_to_use: string
     quantity: number
     price: number
-    image_url: string
+    image_url?: string
     companyID?: number
 
   constructor(
