@@ -21,6 +21,10 @@ dotenv.config();
     entities: [Product, Company, User, Order, Message, UserSession, Room],
     subscribers: [],
     migrations: [],
+    ssl: {
+       rejectUnauthorized: false,
+
+    }
  })
 
  export default dbConnect
