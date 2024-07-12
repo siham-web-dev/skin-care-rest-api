@@ -19,7 +19,7 @@ export function verifyImage(file: Express.Multer.File): string {
   }
 
   const destination = file.destination.replace(".", "");
-  const image_url = `${process.env.WEB_SERVER_HOST}:${process.env.WEB_SERVER_PORT}${destination}${file.filename}`;
+  const image_url = `${process.env.WEB_SERVER_HOST}${destination}${file.filename}`;
 
   return image_url;
 }
