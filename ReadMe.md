@@ -10,7 +10,7 @@
 - validation with zod
 - authentication by email + username + phone_number
   by using jwt and saving session in DB
-- firebase for  ai assisstant bot
+- ai assisstant bot
 
 <b>Architecture Pattern : </b> Clean Architecture Pattern
 
